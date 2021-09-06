@@ -48,6 +48,7 @@ def append_csv(entry):
         file_obj.seek(0, os.SEEK_SET)
         firstline = file_obj.readline()
         if re.match("^Date", firstline):
+             file_obj.seek(0, os.SEEK_END)
              file_obj.write(csv_row + '\n')
         else:
             file_obj.seek(0, os.SEEK_END)
