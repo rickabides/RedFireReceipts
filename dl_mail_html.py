@@ -56,9 +56,8 @@ def append_csv(entry):
 
 def process_mailbox(M):
     """
-   Check Each Email body for Net Total line and parse the value
+   Process each text/html section of the multipart email
     """
-    final = []
     rv, data = M.search(None, "ALL")
     if rv != 'OK':
         print ("No messages found!")
@@ -83,7 +82,7 @@ def process_mailbox(M):
                 cols = [ele.text.strip() for ele in cols]
                 data1.append([ele for ele in cols if ele])
 
-            '''Each element needs to parsed individually and saved to dict'''                
+            '''Each needed element must be parsed individually and saved to dict'''                
             f1 = str(data1[4])
             b,c = f1.split(',')
             c = b.strip('[\'')
