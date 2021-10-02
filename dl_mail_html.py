@@ -44,6 +44,7 @@ def append_csv(entry):
         v.append(value)
     
     csv_row = f"{v[0]},{v[1]},{v[2]},{v[3]},{v[4]},{v[5]},{v[6]}"
+    
     with open("revenue.csv", mode='a+') as file_obj:
         file_obj.seek(0, os.SEEK_SET)
         firstline = file_obj.readline()
@@ -51,7 +52,6 @@ def append_csv(entry):
              file_obj.seek(0, os.SEEK_END)
              file_obj.write(csv_row + '\n')
         else:
-            file_obj.seek(0, os.SEEK_END)
             file_obj.write(HEADER + '\n')
             file_obj.write(csv_row + '\n')
 
@@ -83,7 +83,8 @@ def process_mailbox(M):
                 cols = [ele.text.strip() for ele in cols]
                 data1.append([ele for ele in cols if ele])
 
-            '''Each needed element must be parsed individually and saved to dict'''                
+            '''Each needed element must be parsed individually and saved to dict'''
+                          
             f1 = str(data1[4])
             b,c = f1.split(',')
             c = b.strip('[\'')
@@ -106,19 +107,10 @@ def process_mailbox(M):
             csv_dict["Charge Total"] = float(fc)
 
             f5 = str(data1[8])
-            fb,fc = f5.split(',')
-            if "d" in fc:
-                fc = fc.strip('<=\\n/td\>\']')
-                fd, fe = fc.split('\'')
-                csv_dict["Refund Transactions"] = int(fe)
-            elif "=" not in fc:
-                fc = fc.strip('\=\']')
-                fd, fe = fc.split('\'')
-                csv_dict["Refund Transactions"] = int(fe)
-            else:
-                fc = int(fc[-4])
-                csv_dict["Refund Transactions"] = fc
-
+            match = re.findall(r"\d{1}",f5)
+            refund_tot = match[0]
+            csv_dict["Refund Transactions"] = int(refund_tot)
+            
             f6 = str(data1[9])
             fb,fc = f6.split('$')
             fc = fc.strip('\']')
@@ -147,3 +139,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
